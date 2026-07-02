@@ -29,7 +29,7 @@ The visual identity was built from scratch using **Adobe Illustrator**, starting
 
 | ☀️ Light Mode Theme | 🌙 Dark Mode Theme |
 |---|---|
-| ![Aviafo Logo Light](assets/brand/aviafo-logo-dark.svg) | ![Aviafo Logo Dark](assets/brand/aviafo-logo-light.svg) |
+| ![Aviafo Logo Light](assets/brand/aviafo-logo-light.svg) | ![Aviafo Logo Dark](assets/brand/aviafo-logo-dark.svg) |
 
 ### Color System
 
@@ -72,15 +72,21 @@ The full design system was structured and documented in **Figma**, organized int
 - **Grid** — Layout grid system
 - **Imagens** — Image usage guidelines
 
-## Design Drafts
+### UI Prototyping
 
-### Logo Concept
+The design system was applied to a responsive prototype covering Desktop, Tablet, and Mobile breakpoints, built entirely in **Figma** before any frontend code was written.
+
+![Interface Prototypes](docs/drafts/design/prototypes.png)
+
+### Design Drafts
+
+#### Logo Concept
 ![Logo Concept](docs/drafts/design/logo-concept.png)
 
-### Icon Concept
+#### Icon Concept
 ![Icon Concept](docs/drafts/design/icon-concept.png)
 
-### Design System
+#### Design System
 ![Design System](docs/drafts/design/design-system.png)
 
 ### Interface Previews (Mockups)
@@ -100,6 +106,54 @@ Visual demonstration of how the design system adapts across dark and light envir
 | Figma Plugin — Foundation | Color palette and gradient generation |
 | Adobe Color | Color palette generation and harmony validation |
 | Google Fonts | Typography selection (Montserrat) |
+
+---
+
+## 🗄 Phase 2 — Database Engineering & ER Modeling
+
+Before implementing the backend, a complete Entity-Relationship Diagram (ERD) was designed to ensure a normalized, scalable, and professionally structured database, strictly following 1NF, 2NF, and 3NF normalization rules.
+
+### Entity-Relationship Diagram
+
+![Aviafo ERD](docs/drafts/database/DER-Aviafo.png)
+
+### Core Entities & Responsibilities
+
+| Entity | Responsibility |
+|---|---|
+| **Cliente** | Stores customer personal data (name, email, CPF, phone) |
+| **Endereco** | Delivery and billing addresses linked to each customer |
+| **Produto** | Product catalog with SKU, price, category, and status |
+| **Categoria** | Hierarchical product categorization (supports subcategories via self-reference) |
+| **Estoque** | Stock control with minimum and maximum quantity constraints |
+| **Carrinho** | Active shopping cart per customer session |
+| **CarrinhoItem** | Individual items inside the shopping cart |
+| **Pedido** | Confirmed orders with subtotal, freight, discount, and delivery date |
+| **PedidoItem** | Order line items with frozen unit price at the time of purchase |
+| **Pagamento** | Payment records with method, status, and due date |
+| **Cupom** | Discount coupons with type, value, and expiration control |
+| **Avaliacao** | Product reviews and ratings submitted by customers |
+| **Newsletter** | Email subscription management with active/inactive status |
+
+### Normalization Compliance
+
+- **1NF** — All columns hold atomic values. Multi-valued attributes (e.g., product images, addresses) are separated into dedicated tables.
+- **2NF** — No partial dependencies. Every non-key attribute depends on the entire primary key of its table.
+- **3NF** — No transitive dependencies. Calculated or derived values (e.g., order total) are not duplicated across tables.
+
+### Key Design Decisions
+
+- **Frozen price in PedidoItem:** The `precoUnitario` field is copied from the product at the time of purchase, ensuring order history is never affected by future price changes.
+- **Self-referencing Categoria:** The `CategoriaPaiID` foreign key enables unlimited category depth (e.g., *Linhas → Linhas de Bordado → Linhas Metalizadas*).
+- **Estoque as a separate entity:** Stock data is decoupled from the product table, enabling independent quantity tracking with minimum and maximum thresholds.
+- **Cupom linked to Pedido:** Discount coupons are optionally applied per order, keeping the pricing logic centralized and auditable.
+
+### Tools Used in This Phase
+
+| Tool | Purpose |
+|---|---|
+| dbdiagram.io | Entity-Relationship Diagram modeling and SQL export |
+| DataGrip | SQL Server scripting, validation, and database management |
 
 ---
 
@@ -133,3 +187,4 @@ The Aviafo project prioritizes high-level data integrity and performance:
 - **Professional Tooling:** Workflow optimized with high-performance tools like IntelliJ IDEA, DataGrip for database management, Maven for build automation, and Swagger (OpenAPI 3) for interactive API documentation.
 - **Clean Architecture:** Implementation of a layered MVC (Model-View-Controller) pattern, ensuring a clear separation of concerns between business logic and data access.
 - **Complete Design System:** A fully documented visual identity and design system built before development, ensuring UI consistency across all application screens and states.
+- **Responsive UI Prototyping:** Full interface prototype designed in Figma across Desktop, Tablet, and Mobile breakpoints before any frontend code was written.
